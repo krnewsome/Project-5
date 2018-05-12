@@ -11,15 +11,15 @@ $(document).ready(function () {
   }
 
  //fetch data from url
-fetchData('https://randomuser.me/api/?results=12&seed=foobar')
+fetchData('https://randomuser.me/api/?results=12')
 //show each user profile on page
 .then(data => {
   createUser(data.results)
-  let test = document.getElementById('grid');
-  let test2 = document.getElementsByTagName('button');
-  test.onclick =(e) => {
-    if (e.target.textContent === test2[1].textContent)
-      console.log(test2[1].textContent)
+  let userProfileUl = document.getElementById('grid');
+  let userNameButtons = document.getElementsByTagName('button');
+  userProfileUl.onclick =(e) => {
+    console.log(e.target)
+    if(e.target !== userProfileUl && e.target.className !== 'profiles')
       buildModal(e.target.parentNode)
   }
 })
@@ -40,7 +40,7 @@ class Users {
   //create user list
   this.userLi = document.createElement('li');
   this.userImage = document.createElement('img');
-  this.userName = document.createElement('button');
+  this.userName = document.createElement('h2');
   this.userEmail = document.createElement('p');
   this.userCity = document.createElement('p');
   this.lineBreak = document.createElement('hr');
@@ -50,9 +50,10 @@ class Users {
 
   //set user values
   this.userLi.className = 'profiles';
-  this.userName.id = 'name';
   this.userImage.src = profile.picture.large;
-  this.userName.textContent = profile.name.first +' '+ profile.name.last;
+  this.userName.textContent = profile.name.first.charAt(1).toUpperCase() + profile.name.first.slice(1) +' '+            profile.name.last.charAt(1).toUpperCase() + profile.name.last.slice(1);
+
+
   this.userEmail.textContent = profile.email;
   this.userCity.textContent = profile.location.city;
      //reformat cell number
@@ -60,10 +61,6 @@ class Users {
   this.userAdress.textContent = profile.location.street + ', ' + profile.location.state + ', ' + profile.location.postcode;
      //reformat dob
   this.userDOB.textContent = `Birthday: ${new Date(profile.dob).toLocaleDateString()}`;
-
-
-
-
    //apend profile elements
   this.userLi.append(this.userImage);
   this.userLi.append(this.userName);
@@ -84,11 +81,6 @@ class Users {
     this.pageGrid.append(this.userLi);
    });//end of map
   }//end of constructor
-   formatCell (){
-    this.userCell.textContent.replace(/[^\d]/g, "");
-      return profile.cell.replace(/(\d{3})(\d{4})/, "($1) $2-#3")
-   }
-
 }//end of users class
 
  //create new user
@@ -114,6 +106,9 @@ let closeModal = document.createElement('span');
 
   //create user info seciton
  let userInfo =selectedProfile.cloneNode(true);
+
+ //show hidden user info sections
+ userInfo.children[2].style.display = 'block'
  userInfo.children[4].style.display = 'block';
  userInfo.children[5].style.display = 'block';
  userInfo.children[6].style.display = 'block';
@@ -125,7 +120,7 @@ let closeModal = document.createElement('span');
   modalDiv.append(userInfo);
 
 // close modal
-closeModal.onclick = (e)=>{
+closeModal.onclick = ()=>{
    header.remove();
 
   }
