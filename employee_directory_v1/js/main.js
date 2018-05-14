@@ -7,6 +7,7 @@ $(document).ready(function () {
   const searchForm = document.createElement('form');
   //create search input field
   const searchField = document.createElement('input');
+  searchField.type= 'text';
   searchField.name = 'userSearch';
   searchField.placeholder = 'User Search';
 
@@ -14,6 +15,8 @@ $(document).ready(function () {
   const searchButton = document.createElement('button');
   searchButton.name = 'userSearch';
   searchButton.textContent = 'Search';
+  searchButton.className = 'searchButton'
+
 
  //append search field to page
  let title = document.getElementById('header');
@@ -39,9 +42,6 @@ $(document).ready(function () {
       }
     }
   }
-
-
-
 
 /*---------- Fetch Functions ----------*/
 
@@ -155,7 +155,9 @@ let closeModal = document.createElement('span');
 
   //create clone of user profile
  let userInfo =selectedProfile.cloneNode(true);
-    //create navigation buttons
+
+
+  //create navigation buttons
   const nextButton= document.createElement('button');
   nextButton.textContent= 'Next User';
   const prevButton= document.createElement('button');
@@ -181,11 +183,20 @@ let closeModal = document.createElement('span');
  userInfo.children[6].style.display = 'block';
  userInfo.children[7].style.display = 'block';
  userInfo.classList='modalContent'
+
+
+ let test = document.getElementById('grid')
+
+
   //append modal to to page
   mainHeader.appendChild(header);
   header.append(modalDiv);
-  userInfo.append(nextButton);
-  userInfo.append(prevButton)
+  if (selectedProfile !== test.children[0] ){
+    userInfo.append(prevButton)
+  }
+  if (selectedProfile !== test.children[11] ){
+    userInfo.append(nextButton)
+  }
  userInfo.prepend(closeModal);
   modalDiv.append(userInfo);
 
