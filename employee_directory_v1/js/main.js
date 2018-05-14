@@ -1,6 +1,48 @@
 //wait for page to load before running
 $(document).ready(function () {
 
+  /*---------- Search button -----------*/
+
+  //create search form
+  const searchForm = document.createElement('form');
+  //create search input field
+  const searchField = document.createElement('input');
+  searchField.name = 'userSearch';
+  searchField.placeholder = 'User Search';
+
+  //create search button
+  const searchButton = document.createElement('button');
+  searchButton.name = 'userSearch';
+  searchButton.textContent = 'Search';
+
+ //append search field to page
+ let title = document.getElementById('header');
+ searchForm.append(searchField);
+ searchForm.append(searchButton);
+ title.append(searchForm);
+
+ //add submit event listner to form
+
+  searchForm.onsubmit = (e) => {
+    e.preventDefault();
+    //capture user name input
+    let searchFieldVal = searchField.value;
+    //get all 12 user Names on page
+    let userNames = document.getElementsByTagName('h2');
+    console.log(searchFieldVal);
+    //check searchfield value against userNames
+    for (i = 0; i < userNames.length; i++){
+      if (userNames[i].textContent.toUpperCase().indexOf(searchFieldVal.toUpperCase()) > -1 ){
+        userNames[i].parentNode.style.display = 'block';
+      } else {
+        userNames[i].parentNode.style.display = 'none';
+      }
+    }
+  }
+
+
+
+
 /*---------- Fetch Functions ----------*/
 
  //create fetch function
@@ -11,7 +53,7 @@ $(document).ready(function () {
   }
 
  //fetch data from url, specify for only 12  user profiles
-fetchData('https://randomuser.me/api/?results=12')
+fetchData('https://randomuser.me/api/?results=12&&nat=us')
 //show each user profile on page
 .then(data => {
   //create each user using the retrieved data results
@@ -113,7 +155,25 @@ let closeModal = document.createElement('span');
 
   //create clone of user profile
  let userInfo =selectedProfile.cloneNode(true);
-
+    //create navigation buttons
+  const nextButton= document.createElement('button');
+  nextButton.textContent= 'Next User';
+  const prevButton= document.createElement('button');
+   prevButton.textContent = 'Previous User';
+   //add event listener to next button
+   nextButton.onclick = () => {
+     if (selectedProfile.nextElementSibling !== null){
+       console.log(selectedProfile.nextElementSibling)
+      header.remove();
+     buildModal(selectedProfile.nextElementSibling);
+    } else{console.log('error')}
+   }
+   prevButton.onclick = () => {
+     if (selectedProfile.previousElementSibling !== null){
+     header.remove();
+     buildModal(selectedProfile.previousElementSibling);
+     }else{console.log('error')}
+   }
  //show hidden user info sections
  userInfo.children[2].style.display = 'block'
  userInfo.children[4].style.display = 'block';
@@ -124,6 +184,8 @@ let closeModal = document.createElement('span');
   //append modal to to page
   mainHeader.appendChild(header);
   header.append(modalDiv);
+  userInfo.append(nextButton);
+  userInfo.append(prevButton)
  userInfo.prepend(closeModal);
   modalDiv.append(userInfo);
 
