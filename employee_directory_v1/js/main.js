@@ -89,9 +89,11 @@ class Users {
   let userProfileUl = document.getElementById('grid');
   userProfileUl.onclick =(e) => {
     console.log(e.target)
-    if(e.target !== userProfileUl)
-      buildModal(e.target.parentNode)
-  }
+    if(e.target !== userProfileUl && e.target.className !== 'profiles'){
+      buildModal(e.target.parentNode);
+    } else if(e.target.className === 'profiles')
+    buildModal(e.target)
+      }
  };//end of createModal function
 
 /*---------- Create Modal ----------*/
@@ -102,9 +104,9 @@ let mainHeader = document.getElementById('header');
 let header = document.createElement('div');
   header.className ='modal';
 let modalDiv = document.createElement('div');
-modalDiv.className = 'modal-content';
+modalDiv.className = 'modal-overlay';
 
-  //create close button
+  //create and append close button
 let closeModal = document.createElement('span');
   closeModal.className = 'closebutton';
   closeModal.textContent = 'X';
@@ -118,10 +120,11 @@ let closeModal = document.createElement('span');
  userInfo.children[5].style.display = 'block';
  userInfo.children[6].style.display = 'block';
  userInfo.children[7].style.display = 'block';
+ userInfo.classList='modalContent'
   //append modal to to page
   mainHeader.appendChild(header);
   header.append(modalDiv);
-  modalDiv.appendChild(closeModal);
+ userInfo.prepend(closeModal);
   modalDiv.append(userInfo);
 
 // add event listener to close modal
