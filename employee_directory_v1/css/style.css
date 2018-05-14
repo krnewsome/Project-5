@@ -8,16 +8,44 @@
   height: 0;
 }
 
-h1{
+h1 {
   margin-bottom: 2%;
 }
+form {
+  padding-top: 2%;
+}
+
+input[type=text]{
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.searchButton {
+  border-radius: 5px;
+  font-size: 17px;
+  color: white;
+  background-color: lightgrey;
+  margin-left: 1%;
+}
+.searchButton:hover {
+  font-size: 25px;
+  color: forestgreen;
+}
+
+.navBtn {
+  border-radius: 5px;
+  font-size: 13px;
+  color: white;
+  background-color: forestgreen;
+}
+
+
 body {
   padding: 50px 0 0;
   font-family: "Varela Round", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 62.5%;
   background-color: #F5F5F5;
 }
-
 
 .container ul {
   max-width: 1000px;
@@ -74,7 +102,6 @@ top: 50%;
 left: 50%;
 transform: translate(-80%, -50%);
 border-radius: 5%;
-width: 15%;
 }
 
 @media(min-width: 43.74em) {

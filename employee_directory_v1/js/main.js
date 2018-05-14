@@ -32,10 +32,13 @@ $(document).ready(function () {
     let searchFieldVal = searchField.value;
     //get all 12 user Names on page
     let userNames = document.getElementsByTagName('h2');
+
+    //get all 12 user emails on page
+    let userEmails = document.getElementsByClassName('email');
     console.log(searchFieldVal);
     //check searchfield value against userNames
     for (i = 0; i < userNames.length; i++){
-      if (userNames[i].textContent.toUpperCase().indexOf(searchFieldVal.toUpperCase()) > -1 ){
+      if (userNames[i].textContent.toUpperCase().indexOf(searchFieldVal.toUpperCase()) > -1 || userEmails[i].textContent.toUpperCase().indexOf(searchFieldVal.toUpperCase()) > -1 ){
         userNames[i].parentNode.style.display = 'block';
       } else {
         userNames[i].parentNode.style.display = 'none';
@@ -93,6 +96,7 @@ class Users {
   this.userName.textContent = profile.name.first.charAt(1).toUpperCase() + profile.name.first.slice(1) +' '+            profile.name.last.charAt(1).toUpperCase() + profile.name.last.slice(1);
 
   this.userEmail.textContent = profile.email;
+     this.userEmail.className = 'email';
   this.userCity.textContent = profile.location.city;
      //reformat cell number to (111)111-11111
   this.userCell.textContent = profile.cell.replace(/[^\d]/g, "").replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
@@ -158,10 +162,12 @@ let closeModal = document.createElement('span');
 
 
   //create navigation buttons
-  const nextButton= document.createElement('button');
-  nextButton.textContent= 'Next User';
+  const nextButton = document.createElement('button');
+  nextButton.textContent = 'Next User';
+  nextButton.className = 'navBtn'
   const prevButton= document.createElement('button');
    prevButton.textContent = 'Previous User';
+   prevButton.className = 'navBtn';
    //add event listener to next button
    nextButton.onclick = () => {
      if (selectedProfile.nextElementSibling !== null){
