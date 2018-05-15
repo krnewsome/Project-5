@@ -1,218 +1,237 @@
 //wait for page to load before running
 $(document).ready(function () {
 
-  /*---------- Search button -----------*/
+    const mainHeader = document.getElementById('header');
+    const userProfileUl = document.getElementById('grid');
 
-  //create search form
-  const searchForm = document.createElement('form');
-  //create search input field
-  const searchField = document.createElement('input');
-  searchField.type= 'text';
-  searchField.name = 'userSearch';
-  searchField.placeholder = 'User Search';
+    /*---------- Search button -----------*/
 
-  //create search button
-  const searchButton = document.createElement('button');
-  searchButton.name = 'userSearch';
-  searchButton.textContent = 'Search';
-  searchButton.className = 'searchButton'
+    //create search form
+    const searchForm = document.createElement('form');
+    searchForm.name = 'userSearch';
 
+    //create search input field
+    const searchField = document.createElement('input');
+    searchField.type = 'text';
+    searchField.name = 'userSearch';
+    searchField.placeholder = 'User Search';
 
- //append search field to page
- let title = document.getElementById('header');
- searchForm.append(searchField);
- searchForm.append(searchButton);
- title.append(searchForm);
+    //create search button
+    const searchButton = document.createElement('button');
+    searchButton.name = 'userSearch';
+    searchButton.textContent = 'Search';
+    searchButton.className = 'searchButton';
 
- //add submit event listner to form
+    //append search field to page
+    searchForm.append(searchField);
+    searchForm.append(searchButton);
+    mainHeader.append(searchForm);
 
-  searchForm.onsubmit = (e) => {
-    e.preventDefault();
-    //capture user name input
-    let searchFieldVal = searchField.value;
-    //get all 12 user Names on page
-    let userNames = document.getElementsByTagName('h2');
+    //add submit event listner to form
+    searchForm.onsubmit = (e) => {
+      e.preventDefault();
 
-    //get all 12 user emails on page
-    let userEmails = document.getElementsByClassName('email');
-    console.log(searchFieldVal);
-    //check searchfield value against userNames
-    for (i = 0; i < userNames.length; i++){
-      if (userNames[i].textContent.toUpperCase().indexOf(searchFieldVal.toUpperCase()) > -1 || userEmails[i].textContent.toUpperCase().indexOf(searchFieldVal.toUpperCase()) > -1 ){
-        userNames[i].parentNode.style.display = 'block';
-      } else {
-        userNames[i].parentNode.style.display = 'none';
-      }
-    }
-  }
+      //capture user name input
+      let searchFieldVal = searchField.value;
 
-/*---------- Fetch Functions ----------*/
+      //select all 12 user names on page
+      let userNames = document.getElementsByTagName('h2');
 
- //create fetch function
-  const fetchData = (url) => {
-   return fetch(url)
-           //parse json
-          .then (res => res.json())
-  }
+      //get all 12 user emails on page
+      let userEmails = document.getElementsByClassName('email');
 
- //fetch data from url, specify for only 12  user profiles
-fetchData('https://randomuser.me/api/?results=12&&nat=us')
-//show each user profile on page
+      //check searchfield value against user Names and emails
+      for (i = 0; i < userNames.length; i++) {
+        if (userNames[i].textContent.toUpperCase().indexOf(searchFieldVal.toUpperCase()) > -1 || userEmails[i].textContent.toUpperCase().indexOf(searchFieldVal.toUpperCase()) > -1) {
+          //if there is a match show user profile
+          userNames[i].parentNode.style.display = 'block';
+        } else {
+          //if not hide user profile
+          userNames[i].parentNode.style.display = 'none';
+        }
+      }//end of loop
+    };//end of submit event listener
+
+    /*---------- Fetch Functions ----------*/
+
+    //create fetch function
+    const fetchData = (url) => {
+      return fetch(url)
+
+    //parse json
+    .then(res => res.json());
+    };
+
+    //fetch data from url, specify for only 12  user profiles that are US nationality
+    fetchData('https://randomuser.me/api/?results=12&&nat=us')
 .then(data => {
-  //create each user using the retrieved data results
-  createUser(data.results);
-  createModal();
+      //create each user using the retrieved data results and show on page
+      createUser(data.results);
 
-})
-.catch(error => console.log('Looks like there was a problem', error))
+      //create modal when user profile is selected
+      createModal();
+    })
 
+//log error message if an error occurs
+.catch(error => console.log('Looks like there was a problem', error));
 
+    /*---------- Help Functions ----------*/
 
-/*---------- Help Functions ----------*/
+    //create users class for users
+    class Users {
+      constructor (data) {
+        let profiles = data.map(profile => {
+          this.pageGrid = document.getElementById('grid');
 
-//display user profiles to page
+          //create user profile list
+          this.userLi = document.createElement('li');
+          this.userImage = document.createElement('img');
+          this.userName = document.createElement('h2');
+          this.userEmail = document.createElement('p');
+          this.userCity = document.createElement('p');
+          this.lineBreak = document.createElement('hr');
+          this.userCell = document.createElement('p');
+          this.userAdress = document.createElement('p');
+          this.userDOB = document.createElement('p');
 
-//create users class for users
-class Users {
-  constructor (data){
-   let profiles = data.map(profile =>{
-   this.pageGrid = document.getElementById('grid');
+          //set user profile values
+          this.userLi.className = 'profiles';
 
-  //create user list
-  this.userLi = document.createElement('li');
-  this.userImage = document.createElement('img');
-  this.userName = document.createElement('h2');
-  this.userEmail = document.createElement('p');
-  this.userCity = document.createElement('p');
-  this.lineBreak = document.createElement('hr');
-  this.userCell = document.createElement('p');
-  this.userAdress = document.createElement('p');
-  this.userDOB = document.createElement('p');
+          //user image
+          this.userImage.src = profile.picture.large;
 
-  //set user values
-  this.userLi.className = 'profiles';
-  this.userImage.src = profile.picture.large;
-   //set the user name and change the first charater to uppercase
-  this.userName.textContent = profile.name.first.charAt(1).toUpperCase() + profile.name.first.slice(1) +' '+            profile.name.last.charAt(1).toUpperCase() + profile.name.last.slice(1);
+          //set the user name and change the first charater to uppercase
+          this.userName.textContent = profile.name.first.charAt(1).toUpperCase() + profile.name.first.slice(1) +' '+ profile.name.last.charAt(1).toUpperCase() + profile.name.last.slice(1);
 
-  this.userEmail.textContent = profile.email;
-     this.userEmail.className = 'email';
-  this.userCity.textContent = profile.location.city;
-     //reformat cell number to (111)111-11111
-  this.userCell.textContent = profile.cell.replace(/[^\d]/g, "").replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
-  this.userAdress.textContent = profile.location.street + ', ' + profile.location.state + ', ' + profile.location.postcode;
-     //reformat dob to 01/01/01
-  this.userDOB.textContent = `Birthday: ${new Date(profile.dob).toLocaleDateString()}`;
-   //apend profile elements
-  this.userLi.append(this.userImage);
-  this.userLi.append(this.userName);
-  this.userLi.append(this.userEmail);
-  this.userLi.append(this.userCity);
-  this.userLi.append(this.lineBreak);
-  this.userLi.append(this.userCell);
-  this.userLi.append(this.userAdress);
-  this.userLi.append(this.userDOB);
+          //user email
+          this.userEmail.textContent = profile.email;
+          this.userEmail.className = 'email';
 
-  //hide user information that is not for the main page
-     this.lineBreak.style.display = 'none';
-     this.userCell.style.display = 'none';
-     this.userAdress.style.display = 'none';
-     this.userDOB.style.display = 'none';
+          //user city
+          this.userCity.textContent = profile.location.city;
 
-  //append profiles to the page
-    this.pageGrid.append(this.userLi);
-   });//end of map
-  }//end of constructor
-}//end of users class
+          //reformat user cell number to (111)111-11111
+          this.userCell.textContent = profile.cell.replace(/[^\d]/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
 
- //create new user function
- const createUser = (data) => {
-   const user = new Users(data)
-}//end of create user
+          //user address
+          this.userAdress.textContent = profile.location.street + ', ' + profile.location.state + ', ' + profile.location.postcode;
 
- //createModal function
- const createModal = () =>{
-  let userProfileUl = document.getElementById('grid');
-  userProfileUl.onclick =(e) => {
-    console.log(e.target)
-    if(e.target !== userProfileUl && e.target.className !== 'profiles'){
-      buildModal(e.target.parentNode);
-    } else if(e.target.className === 'profiles')
-    buildModal(e.target)
+          //reformat user dob to 01/01/01
+          this.userDOB.textContent = `Birthday: ${new Date(profile.dob).toLocaleDateString()}`;
+
+          //apend profile elements
+          this.userLi.append(this.userImage);
+          this.userLi.append(this.userName);
+          this.userLi.append(this.userEmail);
+          this.userLi.append(this.userCity);
+          this.userLi.append(this.lineBreak);
+          this.userLi.append(this.userCell);
+          this.userLi.append(this.userAdress);
+          this.userLi.append(this.userDOB);
+
+          //hide user information that is not for the main page
+          this.lineBreak.style.display = 'none';
+          this.userCell.style.display = 'none';
+          this.userAdress.style.display = 'none';
+          this.userDOB.style.display = 'none';
+
+          //append profiles to the page
+          this.pageGrid.append(this.userLi);
+        });//end of map
+      }//end of constructor
+    }//end of users class
+
+    //create new user function
+    const createUser = (data) => {
+      const user = new Users(data);
+    };//end of create user
+
+    //createModal function
+    const createModal = () => {
+      //add click event listener to parent element of user profiles
+      userProfileUl.onclick = (e) => {
+          //build modal for the user profile that is clicked
+          if (e.target !== userProfileUl && e.target.className !== 'profiles') {
+            buildModal(e.target.parentNode);
+          } else if (e.target.className === 'profiles')
+      buildModal(e.target);
+        };
+    };//end of createModal function
+
+    /*---------- Create Modal ----------*/
+
+    //build modal function that accepts the profile information that was selected
+    const buildModal = (selectedProfile) => {
+      let header = document.createElement('div');
+      header.className = 'modal';
+      let modalDiv = document.createElement('div');
+      modalDiv.className = 'modal-overlay';
+
+      //create close button
+      let closeModal = document.createElement('span');
+      closeModal.className = 'closebutton';
+      closeModal.textContent = 'X';
+
+      //create clone of user profile
+      let userInfo = selectedProfile.cloneNode(true);
+
+      //create navigation buttons
+      //next user button
+      const nextButton = document.createElement('button');
+      nextButton.textContent = 'Next User';
+      nextButton.className = 'navBtn';
+
+      //previous user button
+      const prevButton = document.createElement('button');
+      prevButton.textContent = 'Previous User';
+      prevButton.className = 'navBtn';
+
+      //add event listener to next and button
+      nextButton.onclick = () => {
+        if (selectedProfile.nextElementSibling !== null) {
+          header.remove();
+          buildModal(selectedProfile.nextElementSibling);
+        } else {console.log('error');
+        }
+      };
+
+      prevButton.onclick = () => {
+        if (selectedProfile.previousElementSibling !== null) {
+          header.remove();
+          buildModal(selectedProfile.previousElementSibling);
+        } else {console.log('error');
+        };
+      };
+
+      //show hidden user info sections
+      userInfo.children[2].style.display = 'block';
+      userInfo.children[4].style.display = 'block';
+      userInfo.children[5].style.display = 'block';
+      userInfo.children[6].style.display = 'block';
+      userInfo.children[7].style.display = 'block';
+      userInfo.className = 'modalContent';
+
+      //append modal to to page
+      mainHeader.appendChild(header);
+      header.append(modalDiv);
+
+      //check if first user profile before apending button
+      if (selectedProfile !== userProfileUl.children[0]) {
+        userInfo.append(prevButton);
       }
- };//end of createModal function
 
-/*---------- Create Modal ----------*/
+      //check if last user profile before apending button
+      if (selectedProfile !== userProfileUl.children[11]) {
+        userInfo.append(nextButton);
+      }
 
-  //build modal function that accepts the profile information that was selected
-const buildModal = (selectedProfile) => {
-let mainHeader = document.getElementById('header');
-let header = document.createElement('div');
-  header.className ='modal';
-let modalDiv = document.createElement('div');
-modalDiv.className = 'modal-overlay';
+      //append the close button as the first element
+      userInfo.prepend(closeModal);
+      modalDiv.append(userInfo);
 
-  //create and append close button
-let closeModal = document.createElement('span');
-  closeModal.className = 'closebutton';
-  closeModal.textContent = 'X';
-
-  //create clone of user profile
- let userInfo =selectedProfile.cloneNode(true);
-
-
-  //create navigation buttons
-  const nextButton = document.createElement('button');
-  nextButton.textContent = 'Next User';
-  nextButton.className = 'navBtn'
-  const prevButton= document.createElement('button');
-   prevButton.textContent = 'Previous User';
-   prevButton.className = 'navBtn';
-   //add event listener to next button
-   nextButton.onclick = () => {
-     if (selectedProfile.nextElementSibling !== null){
-       console.log(selectedProfile.nextElementSibling)
-      header.remove();
-     buildModal(selectedProfile.nextElementSibling);
-    } else{console.log('error')}
-   }
-   prevButton.onclick = () => {
-     if (selectedProfile.previousElementSibling !== null){
-     header.remove();
-     buildModal(selectedProfile.previousElementSibling);
-     }else{console.log('error')}
-   }
- //show hidden user info sections
- userInfo.children[2].style.display = 'block'
- userInfo.children[4].style.display = 'block';
- userInfo.children[5].style.display = 'block';
- userInfo.children[6].style.display = 'block';
- userInfo.children[7].style.display = 'block';
- userInfo.classList='modalContent'
-
-
- let test = document.getElementById('grid')
-
-
-  //append modal to to page
-  mainHeader.appendChild(header);
-  header.append(modalDiv);
-  if (selectedProfile !== test.children[0] ){
-    userInfo.append(prevButton)
-  }
-  if (selectedProfile !== test.children[11] ){
-    userInfo.append(nextButton)
-  }
- userInfo.prepend(closeModal);
-  modalDiv.append(userInfo);
-
-// add event listener to close modal
-closeModal.onclick = ()=>{
-   header.remove();
-
-  }
-}//end of build modal
-
-/*---------- Event Listeners ----------*/
-
+      // add event listener to close modal
+      closeModal.onclick = () => {
+        header.remove();
+      };
+    };//end of build modal
   });//end ready
