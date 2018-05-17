@@ -42,7 +42,7 @@ $(document).ready(function () {
 
       //check searchfield value against user Names and emails
       for (i = 0; i < userNames.length; i++) {
-        if (userNames[i].textContent.toUpperCase().indexOf(searchFieldVal.toUpperCase()) > -1 || userEmails[i].textContent.toUpperCase().indexOf(searchFieldVal.toUpperCase()) > -1) {
+        if (userNames[i].textContent.toUpperCase().includes(searchFieldVal.toUpperCase()) || userEmails[i].textContent.toUpperCase().includes(searchFieldVal.toUpperCase())) {
           //if there is a match show user profile
           userNames[i].parentNode.style.display = 'block';
         } else {
@@ -101,7 +101,7 @@ $(document).ready(function () {
           this.userImage.src = profile.picture.large;
 
           //set the user name and change the first charater to uppercase
-          this.userName.textContent = profile.name.first.charAt(1).toUpperCase() + profile.name.first.slice(1) +' '+ profile.name.last.charAt(1).toUpperCase() + profile.name.last.slice(1);
+          this.userName.textContent = `${profile.name.first.charAt(1).toUpperCase() + profile.name.first.slice(1)} ${profile.name.last.charAt(1).toUpperCase()+ profile.name.last.slice(1)}`;
 
           //user email
           this.userEmail.textContent = profile.email;
@@ -114,7 +114,7 @@ $(document).ready(function () {
           this.userCell.textContent = profile.cell.replace(/[^\d]/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
 
           //user address
-          this.userAdress.textContent = profile.location.street + ', ' + profile.location.state + ', ' + profile.location.postcode;
+          this.userAdress.textContent = `${profile.location.street}, ${profile.location.state}, ${profile.location.postcode}`;
 
           //reformat user dob to 01/01/01
           this.userDOB.textContent = `Birthday: ${new Date(profile.dob).toLocaleDateString()}`;
@@ -216,12 +216,13 @@ $(document).ready(function () {
       header.append(modalDiv);
 
       //check if first user profile before apending button
-      if (selectedProfile !== userProfileUl.children[0]) {
+
+      if (selectedProfile !== userProfileUl.children[0] && selectedProfile.previousElementSibling.style.display !== 'none') {
         userInfo.append(prevButton);
       }
 
       //check if last user profile before apending button
-      if (selectedProfile !== userProfileUl.children[11]) {
+      if (selectedProfile !== userProfileUl.children[11] && selectedProfile.nextElementSibling.style.display !== 'none') {
         userInfo.append(nextButton);
       }
 
