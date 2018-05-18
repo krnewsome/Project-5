@@ -49,7 +49,7 @@ body {
 .container ul {
   max-width: 75%;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(310px, 30%));
+  grid-template-columns: repeat(auto-fit, minmax(310px, .5fr));
   grid-gap: 3%;
 }
 
