@@ -1,8 +1,11 @@
 //wait for page to load before running
 $(document).ready(function () {
 
+    //select main header and grid
     const mainHeader = document.getElementById('header');
     const userProfileUl = document.getElementById('grid');
+
+    //create foundUserSet
     const foundUsersSet = new Set();
 
     /*---------- Search button -----------*/
@@ -31,8 +34,10 @@ $(document).ready(function () {
     //add submit event listner to form
     searchForm.onsubmit = (e) => {
       e.preventDefault();
+
+      //clear found user set for new search
       foundUsersSet.clear();
-      console.log(foundUsersSet)
+
       //capture user name input
       let searchFieldVal = searchField.value;
 
@@ -41,7 +46,6 @@ $(document).ready(function () {
 
       //get all 12 user emails on page
       let userEmails = document.getElementsByClassName('email');
-
 
       //check searchfield value against user Names and emails
       for (i = 0; i < userNames.length; i++) {
@@ -105,7 +109,7 @@ $(document).ready(function () {
           this.userImage.src = profile.picture.large;
 
           //set the user name and change the first charater to uppercase
-          this.userName.textContent = `${profile.name.first.charAt(1).toUpperCase() + profile.name.first.slice(1)} ${profile.name.last.charAt(1).toUpperCase()+ profile.name.last.slice(1)}`;
+          this.userName.textContent = `${profile.name.first.charAt(1).toUpperCase() + profile.name.first.slice(1)} ${profile.name.last.charAt(1).toUpperCase() + profile.name.last.slice(1)}`;
 
           //user email
           this.userEmail.textContent = profile.email;
@@ -193,20 +197,18 @@ $(document).ready(function () {
       //add event listener to next and button
       nextButton.onclick = () => {
         if (selectedProfile.nextElementSibling !== null) {
-            if(selectedProfile.nextElementSibling.style.display !== 'none'){
-            header.remove();
-            buildModal(selectedProfile.nextElementSibling);
-          }
-        } else {console.log('error');
+          header.remove();
+          buildModal(selectedProfile.nextElementSibling);
         }
       };
 
+      //add event listener to prev and button
       prevButton.onclick = () => {
         if (selectedProfile.previousElementSibling !== null) {
           header.remove();
           buildModal(selectedProfile.previousElementSibling);
         } else {console.log('error');
-        };
+        }
       };
 
       //show hidden user info sections
@@ -222,9 +224,7 @@ $(document).ready(function () {
       header.append(modalDiv);
 
       //check if first user profile before apending button
-
       if (selectedProfile !== userProfileUl.children[0] && (foundUsersSet.size === 12 || foundUsersSet.size === 0))  {
-console.log(foundUsersSet.size)
         userInfo.append(prevButton);
       }
 
