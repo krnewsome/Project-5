@@ -3,6 +3,7 @@ $(document).ready(function () {
 
     const mainHeader = document.getElementById('header');
     const userProfileUl = document.getElementById('grid');
+    const foundUsersSet = new Set();
 
     /*---------- Search button -----------*/
 
@@ -30,7 +31,8 @@ $(document).ready(function () {
     //add submit event listner to form
     searchForm.onsubmit = (e) => {
       e.preventDefault();
-
+      foundUsersSet.clear();
+      console.log(foundUsersSet)
       //capture user name input
       let searchFieldVal = searchField.value;
 
@@ -40,10 +42,12 @@ $(document).ready(function () {
       //get all 12 user emails on page
       let userEmails = document.getElementsByClassName('email');
 
+
       //check searchfield value against user Names and emails
       for (i = 0; i < userNames.length; i++) {
         if (userNames[i].textContent.toUpperCase().includes(searchFieldVal.toUpperCase()) || userEmails[i].textContent.toUpperCase().includes(searchFieldVal.toUpperCase())) {
           //if there is a match show user profile
+          foundUsersSet.add(userNames[i].parentNode);
           userNames[i].parentNode.style.display = 'block';
         } else {
           //if not hide user profile
@@ -189,8 +193,10 @@ $(document).ready(function () {
       //add event listener to next and button
       nextButton.onclick = () => {
         if (selectedProfile.nextElementSibling !== null) {
-          header.remove();
-          buildModal(selectedProfile.nextElementSibling);
+            if(selectedProfile.nextElementSibling.style.display !== 'none'){
+            header.remove();
+            buildModal(selectedProfile.nextElementSibling);
+          }
         } else {console.log('error');
         }
       };
@@ -217,12 +223,13 @@ $(document).ready(function () {
 
       //check if first user profile before apending button
 
-      if (selectedProfile !== userProfileUl.children[0] && selectedProfile.previousElementSibling.style.display !== 'none') {
+      if (selectedProfile !== userProfileUl.children[0] && (foundUsersSet.size === 12 || foundUsersSet.size === 0))  {
+console.log(foundUsersSet.size)
         userInfo.append(prevButton);
       }
 
       //check if last user profile before apending button
-      if (selectedProfile !== userProfileUl.children[11] && selectedProfile.nextElementSibling.style.display !== 'none') {
+      if (selectedProfile !== userProfileUl.children[11] && (foundUsersSet.size === 12 || foundUsersSet.size === 0)) {
         userInfo.append(nextButton);
       }
 
