@@ -9,10 +9,12 @@
 }
 
 h1 {
-  margin-bottom: 2%;
+  margin-bottom: 1%;
+  text-align: center;
 }
 form {
-  padding-top: 2%;
+  padding-bottom: 1%;
+  text-align: center;
 }
 
 input[type=text]{
@@ -39,6 +41,7 @@ input[type=text]{
   background-color: forestgreen;
 }
 
+
 body {
   padding: 50px 0 0;
   font-family: "Varela Round", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -47,10 +50,11 @@ body {
 }
 
 .container ul {
-  max-width: 75%;
+  max-width: 1000px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(310px, .5fr));
+  grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
   grid-gap: 3%;
+  margin: auto;
 }
 
 .container ul li{
@@ -77,10 +81,6 @@ color:#708090;
 
 }
 
-.profiles {
-  list-style-type: none;
-}
-
 .modal-overlay {
   position: fixed;
   left: 0;
@@ -91,8 +91,7 @@ color:#708090;
   background-color: rgba(0,0,0,0.4);
 }
 
-
-.modalContent{
+.modalContent {
 display: inline-block;
 box-shadow: 0 0 3px rgba(0,0,0, 0.15);
 background: #fff;
@@ -133,7 +132,4 @@ border-radius: 5%;
   color: #aaa;
   font-size: 28px;
   font-weight: bold;
-}
-p {
-  font-size: 60%;
 }

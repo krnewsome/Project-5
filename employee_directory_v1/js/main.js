@@ -1,11 +1,12 @@
 //wait for page to load before running
 $(document).ready(function () {
 
-    //select main header and grid
+  //select main header and grid
     const mainHeader = document.getElementById('header');
     const userProfileUl = document.getElementById('grid');
+    const containerDiv = document.getElementById('container');
 
-    //create foundUserSet
+  //create foundUserSet
     const foundUsersSet = new Set();
 
     /*---------- Search button -----------*/
@@ -29,7 +30,7 @@ $(document).ready(function () {
     //append search field to page
     searchForm.append(searchField);
     searchForm.append(searchButton);
-    mainHeader.append(searchForm);
+    containerDiv.insertBefore(searchForm, userProfileUl);
 
     //add submit event listner to form
     searchForm.onsubmit = (e) => {
@@ -197,8 +198,8 @@ $(document).ready(function () {
       //add event listener to next and button
       nextButton.onclick = () => {
         if (selectedProfile.nextElementSibling !== null) {
-          header.remove();
-          buildModal(selectedProfile.nextElementSibling);
+            header.remove();
+            buildModal(selectedProfile.nextElementSibling);
         }
       };
 
